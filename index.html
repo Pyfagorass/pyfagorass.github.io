@@ -8,12 +8,12 @@
     <title>Profitability Calculator</title>
 
     <!-- Bootstrap -->
-    <link href="../static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../static/style.css" rel="stylesheet">
+    <link href="./static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/style.css" rel="stylesheet">
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
     </script>
-    <script type="text/javascript" async src="../static/mathjax-2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+    <script type="text/javascript" async src="./static/mathjax-2.7.1/MathJax.js?config=TeX-AMS_CHTML">
     </script>
 
 <style>
@@ -132,9 +132,9 @@ span.val {
 <em>No judgey. This is me learning JavaScript and my first attempt. Feedback will be much appreciated.</em>
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="../static/jquery-1.12.4/jquery.min.js"></script>
+<script src="./static/jquery-1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="../static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="./static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
 function add_new_product_row(row, count) {
@@ -486,6 +486,8 @@ var break_loop = false;
 
 var start_simulation = document.getElementById('start-simulation');
 start_simulation.onclick = async function() {
+  break_loop = true;
+  await sleep(100);
   break_loop = false;
   var sales_data = get_sales_data()
   var product_data = get_product_data();
