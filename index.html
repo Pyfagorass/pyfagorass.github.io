@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Profitability Calculator</title>
+
+    <!-- Bootstrap -->
+    <link href="../static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/style.css" rel="stylesheet">
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript" async src="../static/mathjax-2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+
+<style>
+.product_id {
+  font-weight:bold;
+}
+.expected_sales {
+  text-align: right;
+  vertical-align: middle;
+}
+
+.product {
+  text-align: right;
+  vertical-align: middle;
+}
+
+.delete-button {
+text-align: right;
+vertical-align: middle
+}
+
+.bound {
+  text-align: right;
+  vertical-align: middle
+}
+
+div.bar {
+  display: inline-block;
+  background:#428bca;
+  color:#428bca;
+}
+
+span.val {
+  display: inline-block;
+  color: black;
+}
+</style>
+
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Pyfagorass</a>
+        </div>
+      </div>
+    </nav>
+
+
+<div  class="center">
+
+<h1>Profitability Calculator</h1>
+
+<p>This calculator simulates your expected profit given a set of products with a range of expected sales. We assume the number of sales is uniformly distributed on the given range, inclusive of the boundaries.</p>
+
+<h3>Products on offer</h3>
+
+<!-- <p><em>click product name to edit</em></p> -->
+<table id="products-table" class="table" width="100%">
+  <tr>
+    <td style="text-align: center; vertical-align: middle" rowspan="2">
+      <strong>#</strong>
+    </td>
+    <td style="text-align: left; vertical-align: middle" rowspan="2">
+      <strong>Product Name</strong>
+    </td>
+    <td style="text-align: center; vertical-align: middle" colspan="2">
+      <strong>Expected Sales</strong>
+    </td>
+    <td style="text-align: right; vertical-align: middle" rowspan="2">
+      <strong>Product Cost</strong>
+    </td>
+    <td style="text-align: right; vertical-align: middle" rowspan="2">
+      <strong>Product Revenue</strong>
+    </td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr>
+    <td style="text-align: right; vertical-align: middle"><strong>Minimum</strong></td>
+    <td style="text-align: right; vertical-align: middle"><strong>Maximum</strong></td>
+  </tr>
+</table>
+
+<p style="text-align: right">
+<button id="add-new-product" type="button" class="btn btn-primary">add new product</button></p>
+
+<h3>Simulate:
+  <button type="button" class="btn btn-primary" id="start-simulation">start</button>
+  <button type="button" class="btn btn-primary" id="stop-simulation">stop</button>
+</h3>
+
+<table class="table" id="simulation-table">
+  <tr>
+    <td style="text-align: left; vertical-align: middle" colspan="2"><strong>Profit Distribution</strong></td>
+    <td style="text-align: left; vertical-align: middle" colspan="2"><strong>Probability(Profit > X) = Y</strong></td>
+  </tr>
+  <tr>
+    <td style="text-align: right; vertical-align: middle">
+      <strong>Range</strong>
+    </td>
+    <td style="text-align: left; vertical-align: middle">
+      <strong>Probability</strong>
+    </td>
+    <td style="text-align: right; vertical-align: middle">
+      <strong>X</strong>
+    </td>
+    <td style="text-align: left; vertical-align: middle">
+      <strong>Y</strong>
+    </td>
+  </tr>
+</table>
+
+</div>
+<em>No judgey. This is me learning JavaScript and my first attempt. Feedback will be much appreciated.</em>
+</body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="../static/jquery-1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="../static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+function add_new_product_row(row, count) {
+  var cell;
+  cell = row.insertCell(0);
+  var span = cell.appendChild(document.createElement('span'));
+  span.innerHTML = count;
+  span.className = "product_id";
+
+  cell = row.insertCell(1);
+  var input = cell.appendChild(document.createElement('input'));
+  input.type = 'text';
+
+  cell = row.insertCell(2);
+  cell.className = 'expected_sales';
+  span = cell.appendChild(document.createElement('span'));
+  span.innerHTML = '2';
+  span.className = 'sales-minimum-value';
+  cell.appendChild(document.createTextNode(" ")); //spacing
+
+  var button = cell.appendChild(document.createElement('button'));
+  button.type = 'button';
+  button.className = 'btn btn-primary btn-xs sales-minimum-increase'
+  span = button.appendChild(document.createElement('span'));
+  span.className = 'glyphicon glyphicon-plus';
+  span.setAttribute('aria-hidden', 'true');
+  cell.appendChild(document.createTextNode(" ")); //spacing
+
+  var button = cell.appendChild(document.createElement('button'));
+  button.type = 'button';
+  button.className = 'btn btn-primary btn-xs sales-minimum-decrease'
+  span = button.appendChild(document.createElement('span'));
+  span.className = 'glyphicon glyphicon-minus';
+  span.setAttribute('aria-hidden', 'true');
+
+  cell = row.insertCell(3);
+  cell.className = 'expected_sales';
+  span = cell.appendChild(document.createElement('span'));
+  span.innerHTML = '5';
+  span.className = 'sales-maximum-value';
+  cell.appendChild(document.createTextNode(" "));
+
+  var button = cell.appendChild(document.createElement('button'));
+  button.type = 'button';
+  button.className = 'btn btn-primary btn-xs sales-maximum-increase'
+  span = button.appendChild(document.createElement('span'));
+  span.className = 'glyphicon glyphicon-plus';
+  span.setAttribute('aria-hidden', 'true');
+  cell.appendChild(document.createTextNode(" "));
+
+  var button = cell.appendChild(document.createElement('button'));
+  button.type = 'button';
+  button.className = 'btn btn-primary btn-xs sales-maximum-decrease'
+  span = button.appendChild(document.createElement('span'));
+  span.className = 'glyphicon glyphicon-minus';
+  span.setAttribute('aria-hidden', 'true');
+
+  cell = row.insertCell(4);
+  cell.className = 'product';
+  // div = cell.appendChild(document.createElement('div'));
+  // div.innerHTML = '5';
+  // div.className = 'product cost';
+  var input = cell.appendChild(document.createElement('input'));
+  input.type = 'text';
+  input.className = 'product cost';
+
+  cell = row.insertCell(5);
+  cell.className = 'product';
+  // div = cell.appendChild(document.createElement('div'));
+  // div.className = 'product profit';
+  // div.innerHTML = '45';
+  var input = cell.appendChild(document.createElement('input'));
+  input.type = 'text';
+  input.className = 'product revenue';
+
+  cell = row.insertCell(6);
+  cell.className = 'delete-button';
+  var button = cell.appendChild(document.createElement('button'));
+  button.type = 'button';
+  button.className = 'btn btn-danger delete';
+  span = button.appendChild(document.createElement('span'));
+  span.className = 'glyphicon glyphicon-remove';
+  span.setAttribute('aria-hidden', 'true');
+
+  return row;
+};
+
+function product_count() {
+  var product_nodes = document.getElementsByClassName('product-row');
+  var product_list = [];
+  for (var i = 0; i < product_nodes.length; i++) {
+    var attribute = product_nodes[i].getAttribute('product');
+    product_list.push(parseFloat(attribute));
+  }
+  return product_list;
+};
+
+function update(product_id) {
+  var product_nodes = document.getElementsByClassName('product-row');
+  for (var i = 0; i < product_nodes.length; i++) {
+    var current_id = product_nodes[i].getAttribute('product');
+    if (current_id > product_id) {
+      product_nodes[i].setAttribute('product', current_id - 1);
+      product_nodes[i].firstChild.firstChild.innerHTML = current_id - 1;
+    };
+  }
+};
+
+function delete_product() {
+  var delete_buttons = document.getElementsByClassName("delete");
+  for (var i = 0; i < delete_buttons.length; i++){
+      delete_buttons[i].onclick = function() {
+        var product_row = this.parentNode.parentNode;
+        product_row.parentNode.removeChild(product_row);
+        update(product_row.getAttribute('product'));
+      };
+  };
+}
+
+// Add first row to table
+var table = document.getElementById("products-table");
+var row = table.insertRow(-1);
+row.setAttribute('class', 'product-row');
+row.setAttribute('product', 1)
+row = add_new_product_row(row, 1);
+
+var add_new_product = document.getElementById("add-new-product");
+add_new_product.onclick = function() {
+  var table = document.getElementById("products-table");
+  var row = table.insertRow(-1);
+  var new_product_count = document.getElementsByClassName('product-row').length + 1;
+  row.setAttribute('product', new_product_count);
+  row.setAttribute('class', 'product-row');
+  row = add_new_product_row(row, new_product_count);
+  delete_product();
+  expected_sales_change();
+};
+
+// Change sales figures
+function expected_sales_change() {
+  var b = document.getElementsByClassName("sales-minimum-increase");
+  for (var i = 0; i < b.length; i++) {
+    b[i].onclick = function() {
+      var value_span = this.parentNode.firstChild;
+      value_span.innerHTML = parseFloat(value_span.innerHTML) + 1;
+    }
+  }
+
+  var b = document.getElementsByClassName("sales-minimum-decrease");
+  for (var i = 0; i < b.length; i++) {
+    b[i].onclick = function() {
+      var value_span = this.parentNode.firstChild;
+      value_span.innerHTML = Math.max(0, parseFloat(value_span.innerHTML) - 1);
+    }
+  }
+
+  var b = document.getElementsByClassName("sales-maximum-increase");
+  for (var i = 0; i < b.length; i++) {
+    b[i].onclick = function() {
+      var value_span = this.parentNode.firstChild;
+      value_span.innerHTML = Math.max(0, parseFloat(value_span.innerHTML) + 1);
+    }
+  }
+
+  var b = document.getElementsByClassName("sales-maximum-decrease");
+  for (var i = 0; i < b.length; i++) {
+    b[i].onclick = function() {
+      var value_span = this.parentNode.firstChild;
+      value_span.innerHTML = Math.max(0, parseFloat(value_span.innerHTML) - 1);
+    }
+  }
+}
+expected_sales_change();
+
+// Get Sales Values
+function get_sales_data() {
+  var sales_data = [];
+  var min = document.getElementsByClassName("sales-minimum-value");
+  var max = document.getElementsByClassName("sales-maximum-value");
+  for (var i = 0; i < min.length; i++) {
+    sales_data.push(
+      [
+        Math.min(parseFloat(min[i].innerHTML), parseFloat(max[i].innerHTML)),
+        Math.max(parseFloat(min[i].innerHTML), parseFloat(max[i].innerHTML))
+      ])
+  }
+  return sales_data;
+};
+
+// Onclick, change to textbox
+function get_product_data() {
+  var product_data = [];
+  var cost   = document.getElementsByClassName("cost");
+  var revenue = document.getElementsByClassName("revenue");
+  for (var i = 0; i < cost.length; i++) {
+    var keep = true;
+    try {
+      var c = parseFloat(cost[i].value);
+      if (isNaN(c)) {throw 'isNan'};
+      cost[i].style.backgroundColor = "";
+    }
+    catch (e) {
+      keep = false;
+      cost[i].style.backgroundColor = "#d9534f";
+    }
+    try {
+      var r = parseFloat(revenue[i].value);
+      if (isNaN(r)) {throw 'isNan'};
+      revenue[i].style.backgroundColor = "";
+    }
+    catch (e) {
+      keep = false;
+      revenue[i].style.backgroundColor = "#d9534f";
+    }
+    if (keep) {
+      product_data.push([c, r])
+    } else {
+      product_data.push([0, 0])
+    }
+  }
+  return product_data;
+}
+
+function min_max_profit(sales_data, product_data) {
+  var min = 0;
+  var max = 0;
+  for (var i = 0; i < sales_data.length; i++) {
+    min = min + sales_data[i][0]*(product_data[i][1] - product_data[i][0]);
+    max = max + sales_data[i][1]*(product_data[i][1] - product_data[i][0]);
+  }
+  return [min, max];
+}
+
+var step_size = 12;
+
+function get_bins(minmax, step_size) {
+  var start = minmax[0];
+  var h = (minmax[1] - minmax[0])/step_size;
+  var bins = []
+  for (var i = 0; i < step_size; i ++) {
+    bins.push([start + i*h, start + (i+1)*h])
+  }
+  return bins;
+}
+
+function add_simulation_row(bins, row, i) {
+    var cell;
+    var div;
+    cell = row.insertCell(0);
+    cell.setAttribute('class', 'bound');
+    div = cell.appendChild(document.createElement('div'));
+    div.innerHTML = "[" + bins[i][0].toFixed(2) + ", " + bins[i][1].toFixed(2) + "]";
+
+    cell = row.insertCell(1);
+    cell.setAttribute('class', 'bar');
+    div = cell.appendChild(document.createElement('div'));
+    div.innerHTML = "."
+    div.setAttribute('class', 'bar '+i);
+    cell.appendChild(document.createTextNode(" "));
+    div = cell.appendChild(document.createElement('span'));
+    div.setAttribute('class', 'bar val '+i);
+
+    cell = row.insertCell(2);
+    cell.setAttribute('class', 'bound');
+    div = cell.appendChild(document.createElement('div'));
+    div.innerHTML = bins[i][0].toFixed(2);
+
+    cell = row.insertCell(3);
+    cell.setAttribute('class', 'bar');
+    div = cell.appendChild(document.createElement('div'));
+    div.setAttribute('class', 'cumsum '+i);
+
+    return row;
+  }
+
+function delete_simulation_rows() {
+  var delete_rows = document.getElementsByClassName('simulation-row');
+  while (delete_rows.length > 0) {
+    for (var i = 0; i < delete_rows.length; i++) {
+        delete_rows[i].parentNode.removeChild(delete_rows[i]);
+      }
+  }
+}
+
+function getWidth() {
+  return Math.max(
+    document.body.scrollWidth,
+    document.documentElement.scrollWidth,
+    document.body.offsetWidth,
+    document.documentElement.offsetWidth,
+    document.documentElement.clientWidth
+  );
+}
+
+function total(data) {
+  var t = 0;
+  for (var i = 0; i < data.length; i++) {
+    t = t + data[i]
+  }
+  return t;
+}
+
+function MAX(data) {
+  var m = data[0];
+  for (var i = 0; i < data.length; i++) {
+    m = Math.max(m, data[i])
+  }
+  return m;
+}
+
+
+function update_bars(data) {
+  var tot = total(data);
+  var scale_factor = 0.5*getWidth()/(MAX(data)/tot);
+  var cumsum = 1;
+  for (var i = 0; i < data.length; i++) {
+    var bar = document.getElementsByClassName('bar '+i)[0];
+    bar.setAttribute('style', 'width:' + scale_factor*data[i]/tot + "px");
+    document.getElementsByClassName('bar val '+i)[0].innerHTML= (100*data[i]/tot).toFixed(2) + " %";
+    if (i == 0) {cumsum = 1} else {cumsum = cumsum - data[i-1]/tot};
+    document.getElementsByClassName('cumsum '+i)[0].innerHTML = (100*cumsum).toFixed(2) + " %";
+    //bar_text.innerHTML("test");
+  }
+}
+
+function calculate_situation(sales_data, product_data) {
+  var profit = 0;
+  for (var i = 0; i < sales_data.length; i++) {
+    profit = profit + parseInt((sales_data[i][0] + Math.random()*(1 + sales_data[i][1] - sales_data[i][0]))*(
+      product_data[i][1] - product_data[i][0]))
+  }
+  return profit;
+}
+
+function update_counts(data, bins, value) {
+  for (var i = 0; i < bins.length; i++) {
+    if ((bins[i][0] <= value) & (value < bins[i][1])) {
+      data[i] = data[i] + 1;
+    }
+  }
+  return data;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+var break_loop = false;
+
+var start_simulation = document.getElementById('start-simulation');
+start_simulation.onclick = async function() {
+  break_loop = false;
+  var sales_data = get_sales_data()
+  var product_data = get_product_data();
+  var minmax = min_max_profit(sales_data, product_data);
+  var bins = get_bins(minmax, step_size);
+  var table = document.getElementById("simulation-table");
+  delete_simulation_rows();
+
+  for (var i = 0; i < bins.length; i++) {
+    var row = table.insertRow(-1);
+    row.setAttribute('class', 'simulation-row');
+    row = add_simulation_row(bins, row, i);
+  }
+
+  console.log(calculate_situation(sales_data, product_data));
+
+  var bar_data = [];
+  for (var i = 0; i < bins.length; i++) {
+    bar_data.push(0);
+  }
+
+  for (var i = 0; i < 1000000; i++) {
+    if (break_loop) {break;}
+    value = calculate_situation(sales_data, product_data);
+    bar_data = update_counts(bar_data, bins, value);
+    await sleep(50);
+    update_bars(bar_data);
+  }
+
+}
+
+var stop_simulation = document.getElementById('stop-simulation');
+stop_simulation.onclick = async function() {
+  break_loop = true;
+}
+
+//var b = document.getElementsByClassName("product cost")[0];
+
+// b.onclick = function() {
+//   var value = b.innerHTML;
+//   var input = document.createElement('input');
+//   input.type = 'text';
+//   input.setAttribute("class", "product");
+//   input.setAttribute("value", value);
+//   b.innerHTML = "";
+//   b.appendChild(input);
+//   //b.parentNode.replaceChild(input, b);
+// };
+// Make this so we check we can parse input
+// b.onblur = function() {
+// alert(b.value);
+//    b.style.background = "lightblue";
+//  };
+
+</script>
+
+</html>
