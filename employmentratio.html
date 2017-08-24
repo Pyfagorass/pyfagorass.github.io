@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Profitability Calculator</title>
+
+    <!-- Bootstrap -->
+    <link href="./static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/style.css" rel="stylesheet">
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript" async src="./static/mathjax-2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+
+<style>
+.product_id {
+  font-weight:bold;
+}
+.expected_sales {
+  text-align: right;
+  vertical-align: middle;
+}
+
+.product {
+  text-align: right;
+  vertical-align: middle;
+}
+
+.delete-button {
+text-align: right;
+vertical-align: middle
+}
+
+.bound {
+  text-align: right;
+  vertical-align: middle
+}
+
+div.bar {
+  display: inline-block;
+  background:#428bca;
+  color:#428bca;
+}
+
+span.val {
+  display: inline-block;
+  color: black;
+}
+
+.def {
+    font-weight: bold;
+    font-style: italic;
+}
+</style>
+
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(employed_projection);
+      google.charts.setOnLoadCallback(population);
+      google.charts.setOnLoadCallback(perQuarter);
+
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Employed'],
+          [2008, 14437.7403558972],
+          [2008.25, 14584.4951642841],
+          [2008.5, 14548.5095360321],
+          [2008.75, 14768.6990920682],
+          [2009, 14615.5019071367],
+          [2009.25, 14356.9604669865],
+          [2009.5, 13829.7975960806],
+          [2009.75, 13973.0368860365],
+          [2010, 13797.2528796684],
+          [2010.25, 13808.7167603046],
+          [2010.5, 13647.7837039452],
+          [2010.75, 13898.1512740513],
+          [2011, 13903.593154387],
+          [2011.25, 13921.8082074364],
+          [2011.5, 14118.3850722953],
+          [2011.75, 14336.4141279099],
+          [2012, 14284.0756960613],
+          [2012.25, 14330.0156016644],
+          [2012.5, 14561.6150598947],
+          [2012.75, 14523.8504997192],
+          [2013, 14558.3750075678],
+          [2013.25, 14691.5383467233],
+          [2013.5, 15035.8431844268],
+          [2013.75, 15176.75480048],
+          [2014, 15054.7913340151],
+          [2014.25, 15094.243115022],
+          [2014.5, 15116.5686558482],
+          [2014.75, 15319.6110663422],
+          [2015, 15459.4197152885],
+          [2015.25, 15657.0027703324],
+          [2015.5, 15828.4392535031],
+          [2015.75, 16018.0682817853],
+          [2016, 15674.513347552],
+          [2016.25, 15545.4473545306],
+          [2016.5, 15833.195035281],
+          [2016.75, 16068.612144968],
+          [2017, 16212.2504506268],
+          [2017.25, 16099.7077653129]
+
+
+        ]);
+
+        var options = {
+          title: 'Number of Employed People (thousands)',
+          curveType: 'function',
+          legend: { position: 'bottom' },
+          hAxis: {format: '####'},
+          tooltip: {isHtml: true},
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('employed_persons'));
+
+        chart.draw(data, options);
+      }
+
+      function employed_projection() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Pre-2010', 'Post-2010', 'Projection'],
+          [2008,14437.7403558972,null,null],
+[2008.25,14584.4951642841,null,null],
+[2008.5,14548.5095360321,null,null],
+[2008.75,14768.6990920682,null,null],
+[2009,14615.5019071367,null,null],
+[2009.25,14356.9604669865,null,null],
+[2009.5,13829.7975960806,null,null],
+[2009.75,13973.0368860365,null,null],
+[2010,13797.2528796684,null,null],
+[2010.25,13808.7167603046,null,null],
+[2010.5,13647.7837039452,13647.7837039452,13752.6873102015],
+[2010.75,null,13898.1512740513,13845.0016735382],
+[2011,null,13903.593154387,13937.3160368751],
+[2011.25,null,13921.8082074364,14029.630400212],
+[2011.5,null,14118.3850722953,14121.9447635489],
+[2011.75,null,14336.4141279099,14214.2591268857],
+[2012,null,14284.0756960613,14306.5734902226],
+[2012.25,null,14330.0156016644,14398.8878535595],
+[2012.5,null,14561.6150598947,14491.2022168962],
+[2012.75,null,14523.8504997192,14583.5165802331],
+[2013,null,14558.3750075678,14675.83094357],
+[2013.25,null,14691.5383467233,14768.1453069068],
+[2013.5,null,15035.8431844268,14860.4596702437],
+[2013.75,null,15176.75480048,14952.7740335806],
+[2014,null,15054.7913340151,15045.0883969174],
+[2014.25,null,15094.243115022,15137.4027602542],
+[2014.5,null,15116.5686558482,15229.7171235911],
+[2014.75,null,15319.6110663422,15322.031486928],
+[2015,null,15459.4197152885,15414.3458502648],
+[2015.25,null,15657.0027703324,15506.6602136017],
+[2015.5,null,15828.4392535031,15598.9745769386],
+[2015.75,null,16018.0682817853,15691.2889402754],
+[2016,null,15674.513347552,15783.6033036122],
+[2016.25,null,15545.4473545306,15875.9176669491],
+[2016.5,null,15833.195035281,15968.232030286],
+[2016.75,null,16068.612144968,16060.5463936228],
+[2017,null,16212.2504506268,16152.8607569597],
+[2017.25,null,16099.7077653129,16245.1751202965],
+[2017.5,null,null,16337.4894836334],
+[2017.75,null,null,16429.8038469702],
+[2018,null,null,16522.1182103071],
+[2018.25,null,null,16614.432573644],
+[2018.5,null,null,16706.7469369808],
+[2018.75,null,null,16799.0613003176],
+[2019,null,null,16891.3756636545],
+[2019.25,null,null,16983.6900269913],
+[2019.5,null,null,17076.0043903282],
+[2019.75,null,null,17168.3187536651],
+[2020,null,null,17260.633117002],
+[2020.25,null,null,17352.9474803387],
+[2020.5,null,null,17445.2618436756],
+[2020.75,null,null,17537.5762070125],
+[2021,null,null,17629.8905703493],
+[2021.25,null,null,17722.2049336862],
+[2021.5,null,null,17814.5192970231],
+[2021.75,null,null,17906.83366036],
+[2022,null,null,17999.1480236967],
+[2022.25,null,null,18091.4623870336],
+[2022.5,null,null,18183.7767503705],
+[2022.75,null,null,18276.0911137073],
+[2023,null,null,18368.4054770442],
+[2023.25,null,null,18460.7198403811],
+[2023.5,null,null,18553.034203718],
+[2023.75,null,null,18645.3485670547],
+[2024,null,null,18737.6629303916],
+[2024.25,null,null,18829.9772937285],
+[2024.5,null,null,18922.2916570653],
+[2024.75,null,null,19014.6060204022],
+[2025,null,null,19106.9203837391],
+[2025.25,null,null,19199.2347470758],
+[2025.5,null,null,19291.5491104127],
+[2025.75,null,null,19383.8634737496],
+[2026,null,null,19476.1778370865],
+[2026.25,null,null,19568.4922004233],
+[2026.5,null,null,19660.8065637602],
+[2026.75,null,null,19753.120927097],
+[2027,null,null,19845.4352904338],
+[2027.25,null,null,19937.7496537707],
+[2027.5,null,null,20030.0640171076],
+[2027.75,null,null,20122.3783804445],
+[2028,null,null,20214.6927437813],
+[2028.25,null,null,20307.0071071181],
+[2028.5,null,null,20399.321470455],
+[2028.75,null,null,20491.6358337918],
+[2029,null,null,20583.9501971287],
+[2029.25,null,null,20676.2645604656],
+[2029.5,null,null,20768.5789238025],
+[2029.75,null,null,20860.8932871392],
+[2030,null,null,20953.2076504761]
+
+
+
+        ]);
+
+        var options = {
+          title: 'Number of Employed People (thousands)',
+          curveType: 'function',
+          legend: { position: 'bottom' },
+          hAxis: {format: '####'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('employed_projection'));
+
+        chart.draw(data, options);
+      }
+
+
+      function population() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Population 15-64 yrs (thousands)'],
+[ 2008, 31544.1694756341],
+[ 2008.25, 31690.0042748992],
+[ 2008.5, 31838.5613470407],
+[ 2008.75, 31986.7373469117],
+[ 2009, 32135.2504645424],
+[ 2009.25, 32284.717073406],
+[ 2009.5, 32435.2516651371],
+[ 2009.75, 32583.706575648],
+[ 2010, 32732.3535375273],
+[ 2010.25, 32881.8087484251],
+[ 2010.5, 33033.3516536683],
+[ 2010.75, 33183.9659867643],
+[ 2011, 33334.8312158281],
+[ 2011.25, 33486.5736003906],
+[ 2011.5, 33639.9752483381],
+[ 2011.75, 33792.0782678957],
+[ 2012, 33944.619072021],
+[ 2012.25, 34098.2325769935],
+[ 2012.5, 34252.7263340557],
+[ 2012.75, 34405.0471012692],
+[ 2013, 34557.895041852],
+[ 2013.25, 34711.9065073844],
+[ 2013.5, 34868.3762812636],
+[ 2013.75, 35021.6890425943],
+[ 2014, 35176.6125133843],
+[ 2014.25, 35331.8031902207],
+[ 2014.5, 35488.638544452],
+[ 2014.75, 35643.4847226389],
+[ 2015, 35798.6533075571],
+[ 2015.25, 35954.7873025988],
+[ 2015.5, 36113.6133164707],
+[ 2015.75, 36271.986524282],
+[ 2016, 36430.7648018983],
+[ 2016.25, 36590.8273264347],
+[ 2016.5, 36749.6306449918],
+[ 2016.75, 36904.7497388152],
+[ 2017, 37060.6526488371],
+[ 2017.25, 37217.3311471249]
+        ]);
+
+        var options = {
+          title: 'Population 15-64 yrs (thousands)',
+          curveType: 'function',
+          legend: { position: 'bottom' },
+          hAxis: {format: '####'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('population'));
+
+        chart.draw(data, options);
+      }
+
+
+       function perQuarter() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Required', 'Actual'],
+[2008,142.858497300055,null],
+[2008.25,142.813712115149,146.754808386901],
+[2008.5,144.892774212441,-35.9856282520013],
+[2008.75,144.006929720398,220.189556036101],
+[2009,147.545073942444,-153.1971849315],
+[2009.25,152.43768254597,-258.5414401502],
+[2009.5,160.725494173432,-527.162870905901],
+[2009.75,160.941373237846,143.2392899559],
+[2010,165.15044048292,-175.7840063681],
+[2010.25,167.095839974651,11.4638806362],
+[2010.5,171.3013386456,-160.933056359399],
+[2010.75,173.526031355284,250.3675701061],
+[2011,172.514958476983,5.44188033569844],
+[2011.25,174.742599518867,18.2150530494],
+[2011.5,176.857836633319,196.5768648589],
+[2011.75,176.587712958996,218.029055614601],
+[2012,176.012138755446,-52.3384318486005],
+[2012.25,179.228343975222,45.9399056030998],
+[2012.5,181.132464523395,231.599458230301],
+[2012.75,180.401058817498,-37.7645601755012],
+[2013,183.609376743865,34.5245078486005],
+[2013.25,185.834524040809,133.163339155501],
+[2013.5,186.632572296647,344.304837703499],
+[2013.75,184.206845136542,140.911616053199],
+[2014,184.883333090969,-121.963466464898],
+[2014.25,189.753917210904,39.4517810068992],
+[2014.5,192.178145214194,22.3255408261994],
+[2014.75,194.962614138587,203.042410494001],
+[2015,194.827950865997,139.8086489463],
+[2015.25,195.760481407009,197.583055043899],
+[2015.5,195.729057723614,171.436483170701],
+[2015.75,196.155243242087,189.629028282199],
+[2016,196.271782794942,-343.5549342333],
+[2016.25,206.086814013637,-129.065993021401],
+[2016.5,212.293347477249,287.747680750401],
+[2016.75,210.869680811718,235.417109687],
+[2017,210.397614871808,143.6383056588],
+[2017.25,211.706620934808,-112.5426853139],
+[2017.5,213.435972693372,237.781718320528],
+[2017.75,213.404053768747,213],
+
+
+
+        ]);
+
+        var options = {
+          title: 'Per Quarter Job Creation (thousands)',
+          curveType: 'function',
+          legend: { position: 'bottom' },
+          seriesType: 'bars',
+          'series': {0: {type: 'line'}},
+          hAxis: {format: '####'}
+        };
+
+        var chart = new google.visualization.ComboChart(document.getElementById('perQuarter'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Pyfagorass</a>
+        </div>
+      </div>
+    </nav>
+
+
+<div  class="center">
+
+<h1>A Short Note on Employment Ratios</h1>
+
+    <p><em>This is a preliminary post. The quoted and calculated figures may not necessarily be correct to the accuracy they are given. The plan is to update this page with each new labour force survey report.</em></p>
+
+<p>Since 2008, StatsSA has been publishing the Quarterly Labour Force Survey (QLFS). It is a household-based sample survey that collects data on the labour market. The table below is taken from the second quarter of 2017 report.</p>
+
+   <p><img src="./static/qlfs/P02112ndQuarter2017.png">
+</p>
+
+    <p>South Africa has a crisis of unemployment. I'm not an economist, so am not going to discuss what is needed to solve the crisis. What I would like to focus on is not <em>how</em> jobs should be created, but rather <em>how many</em> jobs need to be created.</p>
+
+    <p>There are two (complimentary) ways to consider <em>how many</em>. The first is to consider how many jobs need to be created so that unemployment drops to some acceptable level. The second, the measure we will use, is to consider how many jobs need to be created so that the <em>employment/population ratio</em> increases to a given percent.</p>
+
+    <p>The 'population' in the <em>employment/population ratio</em> is the number of people that are <em>of working age</em> which is taken to be between 15 and 64 inclusive. Why not use <em>unemployed</em>? Because in order to be counted as unemployed you need to
+    <ol>
+        <li>Have not been employed in the reference week of the survey, <strong>and</strong></li>
+        <li>Have actively looked for work or tried to start a business in the four weeks preceding the survey interview; <strong>and</strong></li>
+        <li>Have been available for work. <strong>or</strong></li>
+        <li>Have had not activelly looked for work in the past four weeks but had a job or business to start at a definite date in the future and were available.</li>
+    </ol>
+    So someone who has looked for a job, and has now given up looking, who has no future prospects of a job, and is sitting at home idle, but is able to work, and wants to work, is <em>not unemployed</em>.
+    </p>
+
+    <p>Just because some one is not economically active does not mean that they would be working. If you are studying, you are otherwise occupied and not necessarily economically active. If you are a stay-at-home dad or living off a trust fund, you are considered not economically active. It is very unlikely that the number of not economically active will be zero.<p>
+
+    <p>In a country where the fast majority of people simply have no wealth, the only way to get wealth, is to work. Ideally, we want this number to be as high as possible.</p>
+
+    <p>South Africa's employment/population ratio sits at 43%. Is that good? Below is a table of employment/population ratios for select countries. Taken from <a href="http://stats.oecd.org/Index.aspx?DatasetCode=LFS_SEXAGE_I_R">stats.oecd.org</a> for 2015.</p>
+
+    <table class="table">
+        <tr>
+            <th>Country</th><th>Employment/Population Ratio (2015)</th>
+        </tr>
+        <tr><td>South Africa</td><td>40.87%</td></tr>
+        <tr><td>Italy</td><td>43.14%</td></tr>
+        <tr><td>OECD Countries</td><td>55.88%</td></tr>
+        <tr><td>Germany</td><td>57.39%</td></tr>
+        <tr><td>United States</td><td>59.34%</td></tr>
+        <tr><td>United Kingdom</td><td>59.59%</td></tr>
+        <tr><td>Australia</td><td>61.03%</td></tr>
+        <tr><td>Colombia</td><td>63.51%</td></tr>
+        <tr><td>Russian Federation</td><td>65.29%</td></tr>
+        <tr><td>Iceland</td><td>79.25%</td></tr>
+    </table>
+
+    <p>Of the 40 countries for which there is data, South Africa has the lowest (though has improved since 2015), followed by Italy and the average is 57.27%. South Africa's ratio is clearly low, anything below 50% is considered low. Of course just because you have a high ratio doesn't necessarily mean economic prosperity, but it certainly helps. </p>
+
+    <p>If we wanted a ratio of 60%, we would need to employ 22.3 million people - this is an additional 6.2 million jobs. This is all currently unemployed people and 53 thousand more. But this figure of 6.2 million only holds if we added all those jobs right now. Simply because adding so many jobs is going to take time and as time progresses, the working age population increases. So by the time you've added those jobs, there are more people that need jobs. For the remainder of this post, we are going to work towards 2030 as a cut-off date. We can then ask:<p>
+
+    <h3>How many jobs do we need to create each year to reach an employment/population ratio of 60% by 2030?</h3>
+
+    <p>Firstly, how are we doing so far? Below is a graph of the total number of employed people by year since 2008.</p>
+
+    <div id="employed_persons" style="width: 900px; height: 500px"></div>
+
+    <p>We've been doing really well in creating jobs since the second quarter of 2010. I say well because of how amazingly linear job creation is after 2010. The graph below is a linear fit project forward to 2030.</p>
+
+<div id="employed_projection" style="width: 900px; height: 500px"></div>
+
+    <p>The equation for the projection is $y = 369.25x - 728\;639$, with $r^2 = 0.98$. At the current post-2010 rate there will be 20.9 million people employed by 2030. But this not take into account the growing population. The graph below shows this.</p>
+
+<div id="population" style="width: 900px; height: 500px"></div>
+
+    <p>The working age population over time is exactly linear (up to rounding). A fitted linear has the equation $y = 614.03 x - 1\;201\;457$. </p>
+
+    <p>With the fitted linears for number of employed and working age population in hand, we can make the striking observation: The number of working age population is increasing by 614 thousand per year, and the number of new jobs created is 369 thousand. That is, even though we are creating 369 thousand jobs per year, the number of working age people is increasing by a rate of almost double that. We are not even meeting a job creation rate to account for increasing population!</p>
+
+    <p>At our current rate, but 2030 we will have a working age population of 45 million, a employment count of 20.9 million, and an employment/population ratio of 46.55%. We would be 6 million jobs short of a ratio of just 60%. If all those people wanted jobs (and tried to find them and and and), we would have an unemployment rate of 22%.</p>
+
+    <p>It's not that we're not creating jobs, we are, it's that we're not creating <em>enough</em> jobs.</p>
+
+    <p>If we wish to reach an employment/population ratio of 60% by 2030, <strong>we need to create roughly 860 thousand jobs per year</strong>, or <emph>215 thousand</emph> per quarter. Consistently.</p>
+
+    <p>The chart below shows how many jobs need to be created each quarter to reach 60% by 2030 with the actual number of jobs created. The lower the required number, the closer we are to 60% participation.</p>
+
+<div id="perQuarter" style="width: 900px; height: 500px"></div>
+
+    <p>As you can see, the number of new jobs required keeps increasing because we are currently not meeting even population growth. We will only start to make progress with our jobs crisis when the required and actual consistently meet. Better yet, when the actual job creation exceeds the required.</p>
+
+    <h3>List of Definitions</h3>
+
+    <p><em>These definitions are taken from the Statistics South Africa publication, the Quarterly Labour Force Survey, and are presented here for completeness.</em></p>
+
+    <p><span class="def">Discouraged work-seeker</span> is a person who was not employed during the reference period, wanted to work, was available  to  work/start  a  business  but  did  not  take  active  steps  to  find  work  during  the  last  four  weeks,  provided that the main reason given for not seeking work was any of the following: no jobs available in the area; unable to find work requiring his/her skills; lost hope of finding any kind of work.</p>
+
+    <p><span class="def">Economic activities</span> are those that contribute to the production of goods and services in the country. There are two types of economic activities, namely:
+        <ol>
+            <li>Market production activities (work done for others and usually associated with pay or profit); and </li>
+            <li>Non-market production activities (work done for the benefit of the household, e.g. subsistence farming).</li>
+        </ol>
+    </p>
+
+    <p><span class="def">Employed</span> persons are those aged 15–64 years who, during the reference week, did any work for at least one hour, or had a job or business but were not at work (i.e. were temporarily absent).</p>
+
+    <p><span class="def">Employment-to-population ratio (labour absorption rate)</span> is the proportion of the working-age population that is employed.</p>
+
+    <p><span class="def">Informal employment</span>  identifies persons who are in precarious employment situations irrespective of whether or not the entity for which they work is in the formal or informal sector. Persons in informal employment therefore comprise all persons in the informal sector, employees in the formal sector, and persons working in private households who are not entitled to basic benefits such as pension or medical aid contributions from their employer, and who do not have a written contract of employment.</p>
+
+    <p><span class="def">Informal sector:</span> The informal sector has the following two components:
+        <ol>
+            <li>Employees working in establishments that employ fewer than five employees, who do not deduct income tax from their salaries/wages; and</li>
+            <li>Employers, own-account workers and persons helping unpaid in their household business who are not registered for either income tax or value-added tax.</li>
+        </ol></p>
+
+    <p>The <span class="def">labour force</span> comprises all persons who are employed plus all persons who are unemployed.</p>
+
+    <p><span class="def">Labour force participation rate</span> is the proportion of the working-age population that is either employed or unemployed.</p>
+
+    <p><span class="def">Long-term unemployment</span>: Persons in long-term unemployment are those individuals among the unemployed who were without work and trying to find a job or start a business for one year or more.</p>
+
+    <p><span class="def">Not economically active</span>: Persons aged 15–64 years who are neither employed nor unemployed in the reference week.</p>
+
+    <p>Persons in <span class="def">underemployment (time-related)</span> are employed persons who were willing and available to work additional hours, whose total number of hours actually worked during the reference period were below 35 hours per week.</p>
+
+    <p><span class="def">Underutilised labour</span> comprises three groups that are defined as follows: persons who are underemployed, persons who are unemployed, and persons who are discouraged.</p>
+
+    <p><span class="def">Unemployed</span> persons are those (aged 15–64 years) who:
+        <ol>
+            <li>Were not employed in the reference week; <strong>and</strong></li>
+            <li>Actively looked for work or tried to start a business in the four weeks preceding the survey interview; <strong>and</strong></li>
+            <li>Were available for work, i.e. would have been able to start work or a business in the reference week; <strong>or</strong></li>
+            <li>Had not actively looked for work in the past four weeks but had a job or business to start at a definite date
+        in the future and were available.</li>
+        </ol>
+    </p>
+
+    <p><span class="def">Unemployment rate</span> is the proportion of the labour force that is unemployed.</p>
+    <p>The <span class="def">working-age population</span> comprises all persons aged 15–64 years.</p>
+
+</div>
+</body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="./static/jquery-1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="./static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+</html>
